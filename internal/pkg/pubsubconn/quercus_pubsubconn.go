@@ -5,8 +5,8 @@ import (
 	"fmt"
 	pubsub "github.com/huo-ju/quercus/pkg/pubsub"
 	"github.com/huo-ju/quercus/pkg/quality"
-	quorumpb "github.com/rumsystem/quorum/internal/pkg/pb"
 	logging "github.com/ipfs/go-log/v2"
+	quorumpb "github.com/rumsystem/quorum/internal/pkg/pb"
 	"google.golang.org/protobuf/proto"
 	"strings"
 )
@@ -37,7 +37,7 @@ func InitQuercusConn(ctx context.Context, ps *pubsub.Pubsub, nodename string) *Q
 	return &QuercusConn{Ctx: ctx, ps: ps, nodename: nodename}
 }
 
-func (qconn *QuercusConn) JoinChannel(cId string, chain Chain) error {
+func (qconn *QuercusConn) JoinChannel(cId string, chain Chain, ifsubscription bool) error {
 	qconn.Cid = cId
 	qconn.chain = chain
 	qconn.Subscription = qconn.ps.Subscribe(qconn.nodename, cId)

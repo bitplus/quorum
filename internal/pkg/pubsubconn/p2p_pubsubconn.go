@@ -24,7 +24,7 @@ func InitP2pPubSubConn(ctx context.Context, ps *pubsub.PubSub, nodename string) 
 	return &P2pPubSubConn{Ctx: ctx, ps: ps, nodename: nodename}
 }
 
-func (psconn *P2pPubSubConn) JoinChannel(cId string, chain Chain) error {
+func (psconn *P2pPubSubConn) JoinChannel(cId string, chain Chain, ifsubscription bool) error {
 	psconn.Cid = cId
 	psconn.chain = chain
 
@@ -39,21 +39,25 @@ func (psconn *P2pPubSubConn) JoinChannel(cId string, chain Chain) error {
 		channel_log.Infof("Join <%s> done", cId)
 	}
 
-	psconn.Subscription, err = psconn.Topic.Subscribe()
-	if err != nil {
-		channel_log.Fatalf("Subscribe <%s> failed", cId)
-		channel_log.Fatalf(err.Error())
-		return err
-	} else {
-		channel_log.Infof("Subscribe <%s> done", cId)
-	}
+	if ifsubscription == true {
+		psconn.Subscription, err = psconn.Topic.Subscribe()
+		if err != nil {
+			channel_log.Fatalf("Subscribe <%s> failed", cId)
+			channel_log.Fatalf(err.Error())
+			return err
+		} else {
+			channel_log.Infof("Subscribe <%s> done", cId)
+		}
 
-	go psconn.handleGroupChannel()
+		go psconn.handleGroupChannel()
+	}
 	return nil
 }
 
 func (psconn *P2pPubSubConn) LeaveChannel(cId string) {
-	psconn.Subscription.Cancel()
+	if psconn.Subscription != nil {
+		psconn.Subscription.Cancel()
+	}
 	psconn.Topic.Close()
 	channel_log.Infof("Leave channel <%s> done", cId)
 }

@@ -385,7 +385,7 @@ func (chain *Chain) createUserTrxMgr() {
 	}
 
 	userPsconn := pubsubconn.InitP2pPubSubConn(nodectx.GetNodeCtx().Ctx, nodectx.GetNodeCtx().Node.Pubsub, nodectx.GetNodeCtx().Name)
-	userPsconn.JoinChannel(chain.userChannelId, chain)
+	userPsconn.JoinChannel(chain.userChannelId, chain, true)
 
 	chain_log.Infof("<%s> Create and init group userTrxMgr", chain.groupId)
 	var userTrxMgr *TrxMgr
@@ -403,7 +403,7 @@ func (chain *Chain) createSyncTrxMgr() {
 	}
 
 	syncPsconn := pubsubconn.InitP2pPubSubConn(nodectx.GetNodeCtx().Ctx, nodectx.GetNodeCtx().Node.Pubsub, nodectx.GetNodeCtx().Name)
-	syncPsconn.JoinChannel(chain.syncChannelId, chain)
+	syncPsconn.JoinChannel(chain.syncChannelId, chain, true)
 
 	chain_log.Infof("<%s> Create and init group syncTrxMgr", chain.groupId)
 	var syncTrxMgr *TrxMgr
@@ -420,7 +420,7 @@ func (chain *Chain) createProducerTrxMgr() {
 	}
 
 	producerPsconn := pubsubconn.InitP2pPubSubConn(nodectx.GetNodeCtx().Ctx, nodectx.GetNodeCtx().Node.Pubsub, nodectx.GetNodeCtx().Name)
-	producerPsconn.JoinChannel(chain.producerChannelId, chain)
+	producerPsconn.JoinChannel(chain.producerChannelId, chain, true)
 
 	chain_log.Infof("<%s> Create and init group producerTrxMgr", chain.groupId)
 	var producerTrxMgr *TrxMgr

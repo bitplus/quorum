@@ -10,7 +10,7 @@ type Chain interface {
 }
 
 type PubSubConn interface {
-	JoinChannel(cId string, chain Chain) error
+	JoinChannel(cId string, chain Chain, ifsubscription bool) error
 	LeaveChannel(cId string)
 	Publish(data []byte) error
 }

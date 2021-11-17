@@ -401,7 +401,7 @@ func (producer *MolassesProducer) getSyncConn(channelId string) (*TrxMgr, error)
 	} else {
 		molaproducer_log.Debugf("<%s> create sync channel <%s>", producer.groupId, channelId)
 		syncPsconn := pubsubconn.InitP2pPubSubConn(nodectx.GetNodeCtx().Ctx, nodectx.GetNodeCtx().Node.Pubsub, nodectx.GetNodeCtx().Name)
-		syncPsconn.JoinChannel(channelId, producer.cIface.GetChainCtx())
+		syncPsconn.JoinChannel(channelId, producer.cIface.GetChainCtx(), false)
 		syncTrxMgr = &TrxMgr{}
 		syncTrxMgr.Init(producer.grpItem, syncPsconn)
 		producer.trxMgr[channelId] = syncTrxMgr
