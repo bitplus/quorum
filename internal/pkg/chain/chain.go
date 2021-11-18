@@ -361,14 +361,14 @@ func (chain *Chain) CreateConsensus() {
 		chain.Consensus = NewMolasses(&MolassesProducer{}, &MolassesUser{})
 		chain.Consensus.Producer().Init(chain.group.Item, chain.group.ChainCtx.nodename, chain)
 		chain.createProducerTrxMgr()
+		chain.createUserTrxMgr(true)
 	} else {
 		chain_log.Infof("<%s> Create and initial molasses user", chain.groupId)
 		chain.Consensus = NewMolasses(nil, &MolassesUser{})
+		chain.createUserTrxMgr(false)
 	}
 
 	chain.Consensus.User().Init(chain.group.Item, chain.group.ChainCtx.nodename, chain)
-
-	chain.createUserTrxMgr()
 	chain.createSyncTrxMgr()
 
 	chain_log.Infof("<%s> Create and init group syncer", chain.groupId)
@@ -376,7 +376,7 @@ func (chain *Chain) CreateConsensus() {
 	chain.Syncer.Init(chain.group, chain)
 }
 
-func (chain *Chain) createUserTrxMgr() {
+func (chain *Chain) createUserTrxMgr(isproducer bool) {
 	chain_log.Infof("<%s> Create and join group user channel", chain.groupId)
 
 	if _, ok := chain.trxMgrs[chain.userChannelId]; ok {
@@ -385,7 +385,7 @@ func (chain *Chain) createUserTrxMgr() {
 	}
 
 	userPsconn := pubsubconn.InitP2pPubSubConn(nodectx.GetNodeCtx().Ctx, nodectx.GetNodeCtx().Node.Pubsub, nodectx.GetNodeCtx().Name)
-	userPsconn.JoinChannel(chain.userChannelId, chain, true)
+	userPsconn.JoinChannel(chain.userChannelId, chain, !isproducer)
 
 	chain_log.Infof("<%s> Create and init group userTrxMgr", chain.groupId)
 	var userTrxMgr *TrxMgr

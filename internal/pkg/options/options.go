@@ -11,6 +11,8 @@ var optionslog = logging.Logger("options")
 type NodeOptions struct {
 	EnableNat        bool
 	EnableDevNetwork bool
+	MaxPeers         int
+	ConnsHi          int
 	NetworkName      string
 	JWTToken         string
 	JWTKey           string

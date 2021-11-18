@@ -15,6 +15,8 @@ var nodepeername string
 
 const JWTKeyLength = 32
 const defaultNetworkName = "nevis"
+const defaultMaxPeers = 8
+const defaultConnsHi = 100
 
 func GetNodeOptions() *NodeOptions {
 	return nodeopts
@@ -68,6 +70,8 @@ func writeDefaultToconfig(v *viper.Viper) error {
 	v.Set("EnableNat", true)
 	v.Set("EnableDevNetwork", false)
 	v.Set("NetworkName", defaultNetworkName)
+	v.Set("MaxPeers", defaultMaxPeers)
+	v.Set("ConnsHi", defaultConnsHi)
 	v.Set("JWTKey", utils.GetRandomStr(JWTKeyLength))
 	v.Set("JWTToken", "")
 	v.Set("SignKeyMap", map[string]string{})
@@ -121,6 +125,14 @@ func load(dir string, keyname string) (*NodeOptions, error) {
 	options.NetworkName = v.GetString("NetworkName")
 	if options.NetworkName == "" {
 		options.NetworkName = defaultNetworkName
+	}
+	options.MaxPeers = v.GetInt("MaxPeers")
+	if options.MaxPeers == 0 {
+		options.MaxPeers = defaultMaxPeers
+	}
+	options.ConnsHi = v.GetInt("ConnsHi")
+	if options.ConnsHi == 0 {
+		options.ConnsHi = defaultConnsHi
 	}
 
 	options.SignKeyMap = v.GetStringMapString("SignKeyMap")
